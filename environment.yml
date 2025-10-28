@@ -1,0 +1,28 @@
+name: raw_fusion_diffusion
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.10
+  - pip>=23.0
+  
+  # CUDA and GPU support
+  - cudatoolkit=12.1
+  - cudnn=8.9.0
+  
+  # Core scientific packages
+  - numpy=1.24.0
+  - scipy=1.11.0
+  - matplotlib=3.8.0
+  - pandas=2.1.0
+  
+  # Install remaining packages via pip
+  - pip:
+    - -r requirements.txt
+
+variables:
+  CUDA_HOME: $CONDA_PREFIX
+  LD_LIBRARY_PATH: $CONDA_PREFIX/lib:$LD_LIBRARY_PATH

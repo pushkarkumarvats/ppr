@@ -1,0 +1,25 @@
+# Requirements - Minimal Installation
+# Core dependencies only for basic functionality
+
+# Deep Learning
+torch>=2.1.0
+torchvision>=0.16.0
+numpy>=1.24.0
+
+# Image Processing
+pillow>=10.0.0
+opencv-python>=4.8.0
+rawpy>=0.18.0
+
+# Diffusion Models
+diffusers>=0.25.0
+transformers>=4.35.0
+
+# API (for deployment)
+fastapi>=0.104.0
+uvicorn>=0.24.0
+pydantic>=2.5.0
+
+# Utilities
+tqdm>=4.66.0
+pyyaml>=6.0

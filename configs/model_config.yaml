@@ -1,0 +1,88 @@
+# Model Architecture Configuration
+
+# RAW-VAE Configuration
+vae:
+  in_channels: 4  # Bayer RGGB
+  latent_channels: 16
+  hidden_dims: [64, 128, 256, 512]
+  downscale_factor: 8
+  use_attention: true
+  attention_resolutions: [16, 32]
+  kl_weight: 1.0e-6  # Very low to preserve detail
+  perceptual_weight: 0.1
+  
+# Optical Flow Configuration
+optical_flow:
+  feature_dim: 128
+  num_scales: 4
+  num_iterations: 12
+  corr_radius: 4
+  corr_levels: 4
+  use_mixed_precision: true
+  dropout: 0.0
+  
+# Diffusion U-Net Configuration
+diffusion_unet:
+  in_channels: 16  # Latent channels
+  model_channels: 64
+  out_channels: 16
+  num_res_blocks: 2
+  attention_resolutions: [8, 16, 32]
+  channel_mult: [1, 2, 4, 8]
+  num_heads: 8
+  use_scale_shift_norm: true
+  resblock_updown: true
+  use_spatial_transformer: true
+  context_dim: 512  # Conditioning dimension
+  activation: "swiglu"
+  use_checkpoint: true  # Gradient checkpointing
+  
+# Diffusion Schedule Configuration
+diffusion_schedule:
+  num_train_timesteps: 1000
+  num_inference_timesteps: 50
+  beta_schedule: "cosine"
+  beta_start: 0.0001
+  beta_end: 0.02
+  prediction_type: "epsilon"  # or "v_prediction"
+  rescale_betas_zero_snr: true
+  
+# Consistency Model Configuration
+consistency_model:
+  num_consistency_steps: 4  # Target inference steps
+  sigma_min: 0.002
+  sigma_max: 80.0
+  sigma_data: 0.5
+  rho: 7.0
+  ema_decay: 0.9999
+  use_karras_schedule: true
+  
+# Lens Aberration Module Configuration
+lens_aberration:
+  feature_dim: 128
+  num_lens_types: 5  # iPhone models
+  use_spatial_encoding: true
+  correction_mode: "latent"  # or "pixel"
+  psf_kernel_size: 15
+  
+# Conditioning Configuration
+conditioning:
+  use_reference_frames: true
+  use_alignment_confidence: true
+  use_lens_params: true
+  use_metadata: true
+  metadata_features:
+    - iso
+    - exposure_time
+    - focal_length
+    - aperture
+    - focus_distance
+    - white_balance
+    - temperature
+  
+# Model Optimization
+optimization:
+  use_ema: true
+  ema_decay: 0.9999
+  compile_model: true  # torch.compile for PyTorch 2.0+
+  compile_mode: "reduce-overhead"  # or "max-autotune"

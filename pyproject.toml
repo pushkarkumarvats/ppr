@@ -1,0 +1,6 @@
+{
+  "line_length": 120,
+  "target-version": ["py310"],
+  "include": "\\.pyi?$",
+  "extend-exclude": "/(\\..+|build|dist)/"
+}

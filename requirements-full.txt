@@ -1,0 +1,110 @@
+# Complete Requirements - All Features
+# Includes all optional packages for full functionality
+
+# Install with: pip install -r requirements-full.txt
+
+# Core Deep Learning
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+numpy>=1.24.0
+
+# Diffusion & Generation
+diffusers>=0.25.0
+transformers>=4.36.0
+accelerate>=0.25.0
+einops>=0.7.0
+
+# Computer Vision & Image Processing
+opencv-python>=4.8.0
+opencv-contrib-python>=4.8.0
+rawpy>=0.18.0
+pillow>=10.0.0
+scikit-image>=0.22.0
+imageio>=2.33.0
+colour-science>=0.4.3
+
+# Scientific Computing
+scipy>=1.11.0
+pandas>=2.0.0
+
+# Training Tools
+pytorch-lightning>=2.1.0
+timm>=0.9.12
+
+# Experiment Tracking & Logging
+wandb>=0.16.0
+tensorboard>=2.15.0
+psutil>=5.9.0
+
+# Quality Metrics
+lpips>=0.1.4
+piq>=0.8.0
+
+# API & Web Serving
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+gunicorn>=21.2.0
+python-dotenv>=1.0.0
+
+# Web Interface
+gradio>=4.0.0
+
+# Visualization
+matplotlib>=3.8.0
+seaborn>=0.13.0
+plotly>=5.17.0
+
+# Model Export & Deployment
+onnx>=1.15.0
+onnxruntime>=1.16.0
+onnxruntime-gpu>=1.16.0
+
+# Mobile Deployment (macOS only)
+coremltools>=7.1; sys_platform == 'darwin'
+
+# TensorFlow Lite Export (optional)
+onnx-tf>=1.10.0; python_version < '3.12'
+tensorflow>=2.13.0; python_version < '3.12'
+
+# Configuration
+hydra-core>=1.3.0
+omegaconf>=2.3.0
+pyyaml>=6.0.1
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-xdist>=3.3.0
+pytest-timeout>=2.1.0
+
+# Code Quality
+black>=23.0.0
+flake8>=6.0.0
+isort>=5.12.0
+mypy>=1.5.0
+pylint>=3.0.0
+
+# Security
+bandit>=1.7.5
+safety>=2.3.5
+
+# Jupyter Notebooks
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+ipykernel>=6.25.0
+
+# Documentation
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+# Utilities
+tqdm>=4.66.0
+rich>=13.5.0
+typer>=0.9.0
+
+# Data Handling
+h5py>=3.9.0
+zarr>=2.16.0

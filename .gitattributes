@@ -1,0 +1,50 @@
+# Git attributes for consistent line endings and diff handling
+
+# Auto detect text files and normalize line endings to LF
+* text=auto
+
+# Explicitly declare text files
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Scripts should always use LF
+*.ps1 text eol=lf
+
+# Binary files
+*.dng binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pt binary
+*.pth binary
+*.ckpt binary
+*.mlmodel binary
+*.mlpackage binary
+
+# Model files
+*.onnx binary
+*.tflite binary
+*.pb binary
+
+# Archives
+*.zip binary
+*.tar binary
+*.gz binary
+
+# Linguist overrides for accurate language statistics
+*.ipynb linguist-documentation=false
+docs/** linguist-documentation
+notebooks/** linguist-documentation
+
+# Git LFS tracking (if using LFS for large files)
+# Uncomment and customize as needed:
+# *.pt filter=lfs diff=lfs merge=lfs -text
+# *.pth filter=lfs diff=lfs merge=lfs -text
+# *.dng filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,163 @@
+# Training Configuration
+
+# Experiment Setup
+experiment:
+  name: "raw_fusion_diffusion_v1"
+  project: "raw-fusion-diffusion"
+  tags: ["diffusion", "raw", "multi-frame", "iphone"]
+  notes: "Initial training run with consistency distillation"
+  log_dir: "./logs"
+  checkpoint_dir: "./checkpoints"
+  
+# Dataset Configuration
+dataset:
+  train_data_path: "./data/train"
+  val_data_path: "./data/val"
+  num_frames: 8  # Frames per burst
+  image_size: [3024, 4032]  # iPhone 15 Pro resolution
+  crop_size: [512, 512]  # Training crop size
+  normalize: true
+  augmentation:
+    random_crop: true
+    random_flip: true
+    random_rotate: true
+    color_jitter: 0.1
+    noise_augmentation: true
+    synthetic_aberration: true
+  
+# Data Loading
+dataloader:
+  batch_size: 4  # Per GPU
+  num_workers: 8
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 2
+  
+# Training Stages
+stages:
+  # Stage 1: Pre-train VAE
+  vae_pretraining:
+    enabled: true
+    num_epochs: 50
+    learning_rate: 1.0e-4
+    weight_decay: 0.01
+    warmup_steps: 1000
+    
+  # Stage 2: Train Optical Flow
+  optical_flow_training:
+    enabled: true
+    num_epochs: 30
+    learning_rate: 2.0e-4
+    weight_decay: 0.01
+    warmup_steps: 500
+    
+  # Stage 3: Train Diffusion Model
+  diffusion_training:
+    enabled: true
+    num_epochs: 100
+    learning_rate: 1.0e-4
+    weight_decay: 0.01
+    warmup_steps: 2000
+    
+  # Stage 4: Consistency Distillation
+  consistency_distillation:
+    enabled: true
+    num_epochs: 50
+    learning_rate: 5.0e-5
+    weight_decay: 0.01
+    warmup_steps: 1000
+    distillation_schedule:
+      - {from_steps: 1000, to_steps: 50, epochs: 10}
+      - {from_steps: 50, to_steps: 10, epochs: 5}
+      - {from_steps: 10, to_steps: 4, epochs: 5}
+      - {from_steps: 4, to_steps: 2, epochs: 5}
+    
+# Optimizer Configuration
+optimizer:
+  type: "AdamW"
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+  
+# Learning Rate Scheduler
+scheduler:
+  type: "CosineAnnealingWarmRestarts"
+  T_0: 10
+  T_mult: 2
+  eta_min: 1.0e-6
+  
+# Loss Weights
+loss_weights:
+  mse: 1.0
+  perceptual: 0.1
+  hallucination: 0.5
+  temporal: 0.2
+  edge: 0.3
+  tv: 0.01
+  kl: 1.0e-6
+  
+# Mixed Precision Training
+mixed_precision:
+  enabled: true
+  dtype: "float16"
+  grad_scaler:
+    init_scale: 65536.0
+    growth_factor: 2.0
+    backoff_factor: 0.5
+    growth_interval: 2000
+    
+# Gradient Configuration
+gradient:
+  clip_norm: 1.0
+  accumulation_steps: 1
+  checkpointing: true
+  
+# Distributed Training
+distributed:
+  enabled: false  # Set to true for multi-GPU
+  backend: "nccl"
+  find_unused_parameters: false
+  
+# Validation Configuration
+validation:
+  frequency: 1000  # steps
+  num_samples: 16
+  save_images: true
+  metrics:
+    - psnr
+    - ssim
+    - lpips
+    - niqe
+    - hallucination_score
+    
+# Checkpoint Configuration
+checkpoint:
+  save_frequency: 5000  # steps
+  keep_last_n: 5
+  save_best: true
+  best_metric: "psnr"
+  best_mode: "max"
+  
+# Logging Configuration
+logging:
+  frequency: 100  # steps
+  log_gradients: true
+  log_learning_rate: true
+  log_images: true
+  log_metrics: true
+  wandb:
+    enabled: true
+    entity: "your-entity"
+    mode: "online"  # or "offline"
+  tensorboard:
+    enabled: true
+    
+# Early Stopping
+early_stopping:
+  enabled: false
+  patience: 10
+  min_delta: 0.001
+  
+# Reproducibility
+seed: 42
+deterministic: false  # Set to true for full reproducibility (slower)
+benchmark: true  # cuDNN auto-tuner

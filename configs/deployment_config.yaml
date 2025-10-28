@@ -1,0 +1,159 @@
+# Mobile Deployment Configuration
+
+# Target Platform
+platform:
+  target: "ios"  # or "android"
+  min_version: "17.0"
+  devices:
+    - "iPhone 15 Pro"
+    - "iPhone 15 Pro Max"
+    - "iPhone 16 Pro"
+    - "iPhone 16 Pro Max"
+    
+# CoreML Conversion
+coreml:
+  output_dir: "./ios_models"
+  format: "mlpackage"  # or "mlmodel"
+  compute_units: "ALL"  # CPU_AND_GPU, CPU_AND_NE, ALL
+  minimum_deployment_target: "iOS17"
+  
+  # Model-specific settings
+  models:
+    vae_encoder:
+      input_shape: [1, 4, 3024, 4032]
+      precision: "float16"
+      quantize: true
+      quantize_bits: 8
+      
+    vae_decoder:
+      input_shape: [1, 16, 378, 504]
+      precision: "float16"
+      quantize: true
+      quantize_bits: 8
+      
+    optical_flow:
+      input_shape: [2, 4, 3024, 4032]
+      precision: "float16"
+      quantize: false  # Keep full precision for alignment
+      
+    consistency_model:
+      input_shape: [1, 16, 378, 504]
+      precision: "float16"
+      quantize: true
+      quantize_bits: 8
+      
+# Apple Neural Engine (ANE) Optimization
+ane:
+  optimize: true
+  check_compatibility: true
+  replace_unsupported_ops: true
+  target_ops_version: 7  # iOS 17+
+  
+  # ANE-specific constraints
+  constraints:
+    batch_size: 1
+    channel_alignment: 16
+    spatial_alignment: 16
+    max_tensor_size: 16384  # KB
+    
+# Quantization
+quantization:
+  enabled: true
+  mode: "post_training"  # or "quantization_aware"
+  
+  # Weight quantization
+  weights:
+    dtype: "int8"
+    per_channel: true
+    symmetric: true
+    
+  # Activation quantization
+  activations:
+    dtype: "float16"
+    calibration_samples: 100
+    
+# Model Optimization
+optimization:
+  operator_fusion: true
+  constant_folding: true
+  dead_code_elimination: true
+  layer_pruning:
+    enabled: false
+    threshold: 0.01
+    
+# Performance Targets
+performance:
+  max_latency_ms: 30.0
+  max_memory_mb: 1500
+  max_model_size_mb: 50
+  target_fps: 30
+  
+# Testing & Validation
+validation:
+  # On-device testing
+  run_device_tests: false
+  test_devices: []
+  
+  # Numerical validation
+  check_numerical_accuracy: true
+  max_psnr_drop: 0.5  # dB
+  max_mean_error: 0.01
+  
+  # Performance validation
+  benchmark_iterations: 100
+  warmup_iterations: 10
+  
+# Swift Interface Generation
+swift:
+  generate_wrapper: true
+  class_name: "RAWFusionProcessor"
+  framework_name: "RAWFusionKit"
+  output_dir: "./ios_interface"
+  
+# Metal Shaders (for preprocessing)
+metal:
+  generate_shaders: true
+  operations:
+    - bayer_demosaic
+    - optical_flow_viz
+    - raw_to_rgb
+  shader_dir: "./metal_shaders"
+  
+# App Integration
+app:
+  # Privacy & Permissions
+  camera_usage_description: "Process RAW photos for enhanced quality"
+  photo_library_usage: "Save enhanced photos"
+  
+  # Background Processing
+  allow_background: true
+  background_task_identifier: "com.yourapp.raw-processing"
+  
+  # Storage
+  cache_intermediate_results: false
+  max_cache_size_mb: 500
+  
+# Monitoring & Analytics
+monitoring:
+  collect_metrics: true
+  metrics:
+    - inference_latency
+    - memory_usage
+    - model_load_time
+    - error_rate
+  
+  # Error handling
+  fallback_on_error: true
+  fallback_method: "simple_enhancement"
+  
+# Distribution
+distribution:
+  model_hosting: "app_bundle"  # or "remote"
+  compression: true
+  encryption: false
+  
+  # Remote model updates
+  remote:
+    enabled: false
+    check_frequency: "weekly"
+    auto_download: false
