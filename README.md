@@ -222,4 +222,4 @@ Contributions are welcome! Please see CONTRIBUTING.md for guidelines.
 
 ## 📧 Contact
 
-For questions or collaboration: your.email@example.com
+For questions or collaboration: https://www.linkedin.com/in/pushkar-kumar-vats/
